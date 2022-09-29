@@ -1,4 +1,5 @@
 
+import { raw } from 'body-parser';
 import db from '../models/index';
 
 let getTopDoctorHome = (limit) => {
@@ -51,24 +52,39 @@ let getAllDoctor = () => {
 let saveDetailInforDoctor = (inputData) => {
     return new Promise(async (resolve, reject) => {
         try {
-            if (!inputData.doctorId || !inputData.contentHTML || !inputData.contentMarkdown) {
+            if (!inputData.doctorId || !inputData.contentHTML || !inputData.contentMarkdown || !inputData.action) {
                 resolve({
                     errCode: 1,
                     errMessage: 'Missing parameter'
                 })
             } else {
-                await db.MarkDown.create({
-                    contentHTML: inputData.contentHTML,
-                    contentMarkdown: inputData.contentMarkdown,
-                    description: inputData.description,
-                    doctorId: inputData.doctorId
-                })
-                resolve({
-                    errCode: 0,
-                    errMessage: 'Save infor doctor succeed'
-                })
+                if (inputData.action === 'CREATE') {
+                    await db.MarkDown.create({
+                        contentHTML: inputData.contentHTML,
+                        contentMarkdown: inputData.contentMarkdown,
+                        description: inputData.description,
+                        doctorId: inputData.doctorId
+                    })
+                } else if (inputData.action === 'EDIT') {
+                    let doctor = await db.MarkDown.findOne({
+                        where: { doctorId: inputData.doctorId },
+                        raw: false
+                    })
+                    if (doctor) {
+                        doctor.contentHTML = inputData.contentHTML
+                        doctor.contentMarkdown = inputData.contentMarkdown
+                        doctor.description = inputData.description
+                        // doctor.updateAt = new Date()
+                        await doctor.save()
+                    }
+                }
             }
+            resolve({
+                errCode: 0,
+                errMessage: 'Save infor doctor succeed'
+            })
         }
+
         catch (e) {
             reject(e)
         }
