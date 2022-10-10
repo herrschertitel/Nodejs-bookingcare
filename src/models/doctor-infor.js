@@ -1,9 +1,10 @@
 'use strict';
+const { STRING } = require('sequelize');
 const {
     Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-    class History extends Model {
+    class Doctor_Infor extends Model {
         /**
          * Helper method for defining associations.
          * This method is not a part of Sequelize lifecycle.
@@ -11,16 +12,27 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             // define association here
+            Doctor_Infor.belongsTo(models.User, { foreignKey: 'doctorId' })
+
+            Doctor_Infor.belongsTo(models.Allcode, { foreignKey: 'priceId', targetKey: 'keyMap', as: 'priceData' })
+            Doctor_Infor.belongsTo(models.Allcode, { foreignKey: 'paymentId', targetKey: 'keyMap', as: 'paymentData' })
+            Doctor_Infor.belongsTo(models.Allcode, { foreignKey: 'provinceId', targetKey: 'keyMap', as: 'provinceData' })
+
         }
     };
-    History.init({ // viet nhung thuoc tinh cua History vao day
-        patientId: DataTypes.INTEGER,
+    Doctor_Infor.init({ // viet nhung thuoc tinh cua Doctor_Infor vao day
         doctorId: DataTypes.INTEGER,
-        description: DataTypes.TEXT,
-        files: DataTypes.TEXT,
+        priceId: DataTypes.STRING,
+        provinceId: DataTypes.STRING,
+        paymentId: DataTypes.STRING,
+        addressClinic: DataTypes.STRING,
+        nameClinic: DataTypes.STRING,
+        note: DataTypes.STRING,
+        count: DataTypes.INTEGER
     }, {
         sequelize,
-        modelName: 'History',
+        modelName: 'Doctor_Infor',
+        freezeTableName: true
     });
-    return History;
+    return Doctor_Infor;
 };
