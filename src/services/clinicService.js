@@ -1,17 +1,18 @@
 import db from '../models/index';
 require('dotenv').config()
 
-let createNewSpecialty = (data) => {
+let createNewClinic = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
-            if (!data.name || !data.imageBase64 || !data.descriptionHTML || !data.descriptionMarkdown) {
+            if (!data.name || !data.address || !data.imageBase64 || !data.descriptionHTML || !data.descriptionMarkdown) {
                 resolve({
                     errCode: 1,
                     errMessage: 'Missing parameter'
                 })
             } else {
-                await db.Specialty.create({
+                await db.Clinic.create({
                     name: data.name,
+                    address: data.address,
                     image: data.imageBase64,
                     descriptionHTML: data.descriptionHTML,
                     descriptionMarkdown: data.descriptionMarkdown
@@ -28,10 +29,10 @@ let createNewSpecialty = (data) => {
     })
 }
 
-let getAllSpecialty = () => {
+let getAllClinic = () => {
     return new Promise(async (resolve, reject) => {
         try {
-            let data = await db.Specialty.findAll({
+            let data = await db.Clinic.findAll({
                 raw: true,
                 // attributes: {
                 //     exclude: ['image']
@@ -45,7 +46,7 @@ let getAllSpecialty = () => {
             }
             resolve({
                 errCode: 0,
-                errMessage: 'get all specialty successful',
+                errMessage: 'get all clinic successful',
                 data
             })
         } catch (e) {
@@ -55,49 +56,28 @@ let getAllSpecialty = () => {
     })
 }
 
-let getDetailSpecialtyById = (inputId, location) => {
+let getDetailClinicById = async (inputId) => {
     return new Promise(async (resolve, reject) => {
         try {
-            if (!inputId || !location) {
+            if (!inputId) {
                 resolve({
                     errCode: 1,
                     errMessage: 'Missing required parameter'
                 })
             } else {
                 let data = {}
-                if (location === 'ALL') {
-                    data = await db.Specialty.findOne({
-                        where: {
-                            id: inputId,
-                        },
-                        attributes: ['descriptionHTML', 'descriptionMarkdown'],
-                        include: [
-                            { model: db.Doctor_Infor, attributes: ['doctorId', 'provinceId'] }
-                        ],
-                    })
-
-                }
-                else {
-                    data = await db.Specialty.findOne({
-                        where: {
-                            id: inputId,
-                        },
-                        attributes: ['descriptionHTML', 'descriptionMarkdown'],
-                        include: [
-                            {
-                                model: db.Doctor_Infor,
-                                attributes: ['doctorId', 'provinceId'],
-                                where: { provinceId: location },
-
-                            }
-                        ],
-                    })
-
-                }
+                data = await db.Clinic.findOne({
+                    where: {
+                        id: inputId,
+                    },
+                    attributes: ['name', 'descriptionHTML', 'descriptionMarkdown'],
+                    include: [
+                        { model: db.Doctor_Infor, attributes: ['doctorId'] }
+                    ],
+                })
                 resolve({
                     errCode: 0,
                     data,
-                    //doctorSpecialty
                 })
             }
         } catch (e) {
@@ -106,9 +86,8 @@ let getDetailSpecialtyById = (inputId, location) => {
         }
     })
 }
-
 module.exports = {
-    createNewSpecialty,
-    getAllSpecialty,
-    getDetailSpecialtyById
+    createNewClinic,
+    getAllClinic,
+    getDetailClinicById
 }

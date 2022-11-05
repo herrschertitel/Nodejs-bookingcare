@@ -8,17 +8,20 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      name: {
+        type: Sequelize.STRING
+      },
       address: {
         type: Sequelize.STRING
       },
-      description: {
+      image: {
+        type: Sequelize.BLOB('long')
+      },
+      descriptionHTML: {
         type: Sequelize.TEXT
       },
-      image: {
-        type: Sequelize.STRING
-      },
-      name: {
-        type: Sequelize.STRING
+      descriptionMarkdown: {
+        type: Sequelize.TEXT
       },
       createdAt: {
         allowNull: false,
