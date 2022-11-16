@@ -95,6 +95,79 @@ let sendMail = async (data) => {
         html: contentMail(data), // html body
     });
 }
+
+let sendAttachment = (dataSend) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let transporter = nodemailer.createTransport({
+                host: "smtp.gmail.com",
+                port: 587,
+                secure: false, // true for 465, false for other ports
+                auth: {
+                    user: process.env.APP_GMAIL, // generated ethereal user
+                    pass: process.env.APP_GMAIL_PASSWORD, // generated ethereal password
+                },
+            });
+
+            // send mail with defined transport object
+            let info = await transporter.sendMail({
+                from: '"no-reply" <hoangk24aas@gmail.com>', // sender address
+                to: dataSend.email, // list of receivers
+                subject: "Result of appointment booking", // Subject line
+                html: contentMailRemedy(dataSend), // html body
+                attachments: [
+                    {
+                        filename: `Remedy-${dataSend.namePatient}-doctor-${dataSend.lastNameDoctor}-${dataSend.firstNameDoctor}.png`,
+                        content: dataSend.imageBase64.split('base64,')[1],
+                        encoding: 'base64'
+                    }
+                ]
+            });
+            resolve({
+                errCode: 0,
+                errMessage: 'Send attachment successfully'
+            })
+        } catch (e) {
+            console.log(e)
+            reject(e)
+        }
+    })
+
+}
+
+let contentMailRemedy = (data) => {
+    let result = ''
+    if (data.language === 'vi') {
+        result = `
+            <p>Xin chào, ${data.namePatient}!</p>
+            <p>Bạn nhận được email vì đã khám thành công!</p>
+            <div><b>Bác sĩ: ${data.lastNameDoctor} ${data.firstNameDoctor}</b></div>
+            <p>Thông tin đơn thuốc/hóa đơn được bác sĩ gửi trong file đính kèm</p>
+            <div>Xin chân thành cảm ơn!</div>
+        `
+    }
+    if (data.language === 'en') {
+        result = `
+            <p>Hello, ${data.namePatient}!</p>
+            <p>You received an email because your scan was successful!</p>
+            <div><b>Doctor: ${data.lastNameDoctor} ${data.firstNameDoctor}</b></div>
+            <p>Prescription/invoice information sent by the doctor in the attached file</p>
+            <div>Thank you very much!</div>
+        `
+    }
+    if (data.language === 'ru') {
+        result = `
+            <p>Здравствуйте, ${data.namePatient}!</p>
+            <p>Вы получили электронное письмо, поскольку сканирование прошло успешно!</p>
+            <div><b>Bác sĩ: ${data.lastNameDoctor} ${data.firstNameDoctor}</b></div>
+            <p>Информация о рецепте/счете, отправленная врачом в прикрепленном файле</p>
+            <div>Большое спасибо!</div>
+        `
+    }
+    return result
+}
+
 module.exports = {
-    sendMail
+    sendMail,
+    sendAttachment
 }

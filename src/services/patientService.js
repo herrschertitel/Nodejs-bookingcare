@@ -36,7 +36,9 @@ let postBookingAppoiment = (data) => {
                         email: data.email,
                         roleId: 'R3',
                         firstName: data.name,
-                        gender: data.gender
+                        gender: data.gender,
+                        address: data.address,
+                        phonenumber: data.phone
                     },
                     raw: true
                 })
