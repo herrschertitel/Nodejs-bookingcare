@@ -5,6 +5,7 @@ import doctorController from '../controllers/doctorController'
 import patientController from '../controllers/patientControler'
 import specialtyController from '../controllers/specialtyController'
 import clinicController from '../controllers/clinicController'
+import handbookController from '../controllers/handbookController'
 // import res from "express/lib/response";
 
 let router = express.Router();
@@ -16,10 +17,7 @@ let initwebRoutes = (app) => {
     router.get('/crud', homeController.getCRUD); //create user
     router.get('/get-crud', homeController.displayGetCRUD); //show list of users
 
-
     router.post('/post-crud', homeController.postCRUD); //user creation successful message
-
-
 
     router.get('/edit-crud', homeController.getEditCrud)    //edit user's information
 
@@ -63,6 +61,9 @@ let initwebRoutes = (app) => {
     router.post('/api/create-new-clinic', clinicController.createNewClinic)
     router.get('/api/get-all-clinic', clinicController.getAllClinic)
     router.get('/api/get-detail-clinic-by-id', clinicController.getDetailClinicById)
+
+    //handbookController
+    router.post('/api/create-new-handbook', handbookController.createNewHandBook)
 
     return app.use("/", router);
 }

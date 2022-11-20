@@ -14,7 +14,7 @@ module.exports = {
       doctorId: {
         type: Sequelize.INTEGER
       },
-      descriotion: {
+      description: {
         type: Sequelize.TEXT
       },
       files: {

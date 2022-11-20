@@ -18,7 +18,13 @@ let getTopDoctorHome = (limit) => {
                 },
                 include: [
                     { model: db.Allcode, as: 'positionData', attributes: ['valueEn', 'valueVi', 'valueRu'] },
-                    { model: db.Allcode, as: 'genderData', attributes: ['valueEn', 'valueVi', 'valueRu'] }
+                    { model: db.Allcode, as: 'genderData', attributes: ['valueEn', 'valueVi', 'valueRu'] },
+                    {
+                        model: db.Doctor_Infor, attributes: ['doctorId'],
+                        include: [
+                            { model: db.Specialty, attributes: ['name'] }
+                        ]
+                    }
                 ],
                 raw: true,
                 nest: true

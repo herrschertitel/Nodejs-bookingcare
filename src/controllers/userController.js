@@ -4,7 +4,7 @@ import { handleUserLogin } from '../services/userSercive'
 let handleLogin = async (req, res) => {
     let email = req.body.email;
     let password = req.body.password;
-    console.log(email)
+    //console.log(email)
 
     if (!email || !password) {
         return res.status(500).json({
