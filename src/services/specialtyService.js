@@ -70,7 +70,7 @@ let getDetailSpecialtyById = (inputId, location) => {
                         where: {
                             id: inputId,
                         },
-                        attributes: ['descriptionHTML', 'descriptionMarkdown'],
+                        attributes: ['name', 'descriptionHTML', 'descriptionMarkdown'],
                         include: [
                             { model: db.Doctor_Infor, attributes: ['doctorId', 'provinceId'] }
                         ],

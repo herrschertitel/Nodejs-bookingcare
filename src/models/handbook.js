@@ -1,5 +1,4 @@
 'use strict';
-const { STRING } = require('sequelize');
 const {
     Model
 } = require('sequelize');
@@ -23,7 +22,6 @@ module.exports = (sequelize, DataTypes) => {
     }, {
         sequelize,
         modelName: 'HandBook',
-        freezeTableName: true
     });
     return HandBook;
 };
