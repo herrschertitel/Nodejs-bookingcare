@@ -14,10 +14,13 @@ module.exports = {
       doctorId: {
         type: Sequelize.INTEGER
       },
-      description: {
-        type: Sequelize.TEXT
+      date: {
+        type: Sequelize.STRING
       },
-      files: {
+      timeType: {
+        type: Sequelize.STRING
+      },
+      diagnosis: {
         type: Sequelize.TEXT
       },
       createdAt: {

@@ -114,7 +114,49 @@ let postVerifyBookingAppoiment = (data) => {
     })
 }
 
+let getHistory = (email) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!email) {
+                resolve({
+                    errCode: 1,
+                    errMessage: 'Missing parameter'
+                })
+            } else {
+                let user = await db.User.findOne({
+                    where: { email: email },
+                    attributes: ['firstName'],
+                    include: [
+                        {
+                            model: db.History, attributes: ['doctorId', 'diagnosis', 'date'],
+                            include: [
+                                { model: db.User, as: 'Doctor', attributes: ['firstName'] },
+                                { model: db.Allcode, attributes: ['valueVi', 'valueEn', 'valueRu'] }
+                            ],
+                        },
+                    ]
+                })
+                if (user) {
+                    resolve({
+                        errCode: 0,
+                        user: user
+                    })
+                } else {
+                    resolve({
+                        errCode: 2,
+                        errMessage: 'User does not exist'
+                    })
+                }
+            }
+        } catch (e) {
+            console.log(e)
+            reject(e)
+        }
+    })
+}
+
 module.exports = {
     postBookingAppoiment,
-    postVerifyBookingAppoiment
+    postVerifyBookingAppoiment,
+    getHistory
 }

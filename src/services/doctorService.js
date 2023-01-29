@@ -426,7 +426,7 @@ let getDoctorBookingByDate = (doctorId, date) => {
 let sendRemedy = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
-            if (!data.email || !data.doctorId || !data.patientId || !data.date || !data.timeType) {
+            if (!data.email || !data.doctorId || !data.patientId || !data.date || !data.timeType || !data.diagnosis) {
                 resolve({
                     errCode: 1,
                     errMessage: 'Missing required parameter'
@@ -448,7 +448,13 @@ let sendRemedy = (data) => {
                 }
 
                 await emailService.sendAttachment(data)
-
+                await db.History.create({
+                    doctorId: data.doctorId,
+                    patientId: data.patientId,
+                    diagnosis: data.diagnosis,
+                    date: data.date,
+                    timeType: data.timeType,
+                })
                 resolve({
                     errCode: 0,
                     errMessage: 'Send remedy successfully'
@@ -471,5 +477,5 @@ module.exports = {
     getExtraInforDoctor: getExtraInforDoctor,
     getInforDoctor: getInforDoctor,
     getDoctorBookingByDate: getDoctorBookingByDate,
-    sendRemedy: sendRemedy
+    sendRemedy: sendRemedy,
 }

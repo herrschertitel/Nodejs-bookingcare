@@ -8,7 +8,7 @@ let postBookingAppoiment = async (req, res) => {
         console.log(e)
         return res.status(200).json({
             errCode: -1,
-            message: 'Error from sever'
+            message: 'Error from server'
         })
     }
 }
@@ -21,12 +21,26 @@ let postVerifyBookingAppoiment = async (req, res) => {
         console.log(e)
         return res.status(200).json({
             errCode: -1,
-            message: 'Error from sever'
+            message: 'Error from server'
+        })
+    }
+}
+
+let getHistory = async (req, res) => {
+    try {
+        let infor = await patientService.getHistory(req.query.email)
+        return res.status(200).json(infor)
+    } catch (e) {
+        console.log(e)
+        return res.status(200).json({
+            errCode: -1,
+            message: 'Error from server'
         })
     }
 }
 
 module.exports = {
     postBookingAppoiment,
-    postVerifyBookingAppoiment
+    postVerifyBookingAppoiment,
+    getHistory
 }
